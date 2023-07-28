@@ -28,3 +28,9 @@ mapper:
 pagehelper:
   helper-dialect: MYSQL
   support-methods-arguments: true
+
+
+# 日志级别
+logging:
+  level:
+    root: info

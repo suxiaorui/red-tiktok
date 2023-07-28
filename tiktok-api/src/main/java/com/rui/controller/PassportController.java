@@ -50,7 +50,7 @@ public class PassportController extends BaseInfoProperties{
         redis.setnx60s(MOBILE_SMSCODE + ":" + userIp, userIp);
 
         String code = (int)((Math.random() * 9 + 1) * 100000) + "";
-        smsUtils.sendSMS(mobile, code);
+//        smsUtils.sendSMS(mobile, code);
         log.info(code);
 
         // 把验证码放入到redis中，用于后续的验证
@@ -99,6 +99,17 @@ public class PassportController extends BaseInfoProperties{
         usersVO.setUserToken(uToken);
 
         return GraceJSONResult.ok(usersVO);
+    }
+
+
+    @PostMapping("logout")
+    public GraceJSONResult logout(@RequestParam String userId,
+                                  HttpServletRequest request) throws Exception {
+
+        // 后端只需要清除用户的token信息即可，前端也需要清除，清除本地app中的用户信息和token会话信息
+        redis.del(REDIS_USER_TOKEN + ":" + userId);
+
+        return GraceJSONResult.ok();
     }
 
 //    public Map<String, String> getErrors(BindingResult result) {

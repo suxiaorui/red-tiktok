@@ -68,13 +68,13 @@ public class SMSUtils {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            new SMSUtils().sendSMS("17543038586", "7896");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            new SMSUtils().sendSMS("17543038586", "7896");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
 
 

@@ -8,7 +8,11 @@
     <artifactId>red-tiktok-dev</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>tiktok</module>
+        <module>tiktok-common</module>
+        <module>tiktok-model</module>
+        <module>tiktok-mapper</module>
+        <module>tiktok-service</module>
+        <module>tiktok-api</module>
     </modules>
 
     <packaging>pom</packaging>

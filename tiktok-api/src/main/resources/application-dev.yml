@@ -17,3 +17,10 @@ spring:
       pool-name: DataSourceHikariCP
       max-lifetime: 18000000
       connection-test-query: SELECT 1
+
+  redis:
+    host: 192.168.47.132
+    port: 6379
+    database: 0
+    password: 123321
+

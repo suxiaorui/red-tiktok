@@ -1,5 +1,6 @@
 package com.rui.controller;
 
+import com.rui.grace.result.GraceJSONResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +16,6 @@ public class HelloController {
 
     @GetMapping("hello")
     public Object hello(){
-        return "hello!";
-
+        return GraceJSONResult.ok("hello");
     }
 }

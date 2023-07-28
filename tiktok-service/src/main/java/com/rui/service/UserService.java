@@ -20,5 +20,10 @@ public interface UserService {
      */
     public Users createUser(String mobile);
 
+    /**
+     * 根据用户主键查询用户信息
+     */
+    public Users getUser(String userId);
+
 
 }

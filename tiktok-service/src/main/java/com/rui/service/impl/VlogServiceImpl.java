@@ -82,9 +82,30 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         }
         List<IndexVlogVO> list = vlogMapperCustom.getIndexVlogList(map);
 
+        for (IndexVlogVO v : list) {
+            String vlogerId = v.getVlogerId();
+            String vlogId = v.getVlogId();
+
+            if (StringUtils.isNotBlank(userId)) {
+
+                // 判断当前用户是否点赞过视频
+                v.setDoILikeThisVlog(doILikeVlog(userId, vlogId));
+            }
+
+        }
 
 //        return list;
         return setterPagedGrid(list, page);
+    }
+
+    private boolean doILikeVlog(String myId, String vlogId) {
+
+        String doILike = redis.get(REDIS_USER_LIKE_VLOG + ":" + myId + ":" + vlogId);
+        boolean isLike = false;
+        if (StringUtils.isNotBlank(doILike) && doILike.equalsIgnoreCase("1")) {
+            isLike = true;
+        }
+        return isLike;
     }
 
     @Override

@@ -222,6 +222,7 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
     }
 
+    @Override
     public Vlog getVlog(String id) {
         return vlogMapper.selectByPrimaryKey(id);
     }

@@ -3,11 +3,15 @@ package com.rui.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.rui.base.BaseInfoProperties;
 import com.rui.bo.CommentBO;
+import com.rui.enums.MessageEnum;
 import com.rui.enums.YesOrNo;
 import com.rui.mapper.CommentMapper;
 import com.rui.mapper.CommentMapperCustom;
 import com.rui.pojo.Comment;
+import com.rui.pojo.Vlog;
 import com.rui.service.CommentService;
+import com.rui.service.MsgService;
+import com.rui.service.VlogService;
 import com.rui.utils.PagedGridResult;
 import com.rui.vo.CommentVO;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +39,12 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
 
     @Autowired
     private CommentMapperCustom commentMapperCustom;
+
+    @Autowired
+    private MsgService msgService;
+
+    @Autowired
+    private VlogService vlogService;
 
     @Autowired
     private Sid sid;
@@ -66,6 +76,24 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
         // 留言后的最新评论需要返回给前端进行展示
         CommentVO commentVO = new CommentVO();
         BeanUtils.copyProperties(comment, commentVO);
+
+        // 系统消息：评论/回复
+        Vlog vlog = vlogService.getVlog(commentBO.getVlogId());
+        Map msgContent = new HashMap();
+        msgContent.put("vlogId", vlog.getId());
+        msgContent.put("vlogCover", vlog.getCover());
+        msgContent.put("commentId", commentId);
+        msgContent.put("commentContent", commentBO.getContent());
+        Integer type = MessageEnum.COMMENT_VLOG.type;
+        if (StringUtils.isNotBlank(commentBO.getFatherCommentId()) &&
+                !commentBO.getFatherCommentId().equalsIgnoreCase("0") ) {
+            type = MessageEnum.REPLY_YOU.type;
+        }
+
+        msgService.createMsg(commentBO.getCommentUserId(),
+                commentBO.getVlogerId(),
+                type,
+                msgContent);
 
         return commentVO;
     }

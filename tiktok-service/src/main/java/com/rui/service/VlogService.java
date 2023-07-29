@@ -1,6 +1,7 @@
 package com.rui.service;
 
 import com.rui.bo.VlogBO;
+import com.rui.pojo.Vlog;
 import com.rui.utils.PagedGridResult;
 import com.rui.vo.IndexVlogVO;
 
@@ -82,5 +83,8 @@ public interface VlogService {
                                                Integer page,
                                                Integer pageSize);
 
-
+    /**
+     * 根据主键查询vlog
+     */
+    public Vlog getVlog(String id);
 }

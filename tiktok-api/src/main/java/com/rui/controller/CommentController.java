@@ -42,7 +42,7 @@ public class CommentController extends BaseInfoProperties {
     @Autowired
     private VlogService vlogService;
 
-    @GetMapping("create")
+    @PostMapping("create")
     public Object create(@RequestBody @Valid CommentBO commentBO) throws  Exception{
 
         CommentVO commentVO = commentService.createComment(commentBO);

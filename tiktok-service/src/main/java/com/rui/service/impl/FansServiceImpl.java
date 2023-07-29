@@ -68,4 +68,20 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
 
         return fan;
     }
+
+    @Transactional
+    @Override
+    public void doCancel(String myId, String vlogerId) {
+
+        // 判断我们是否朋友关系，如果是，则需要取消双方的关系
+        Fans fan = queryFansRelationship(myId, vlogerId);
+        if (fan != null && fan.getIsFanFriendOfMine() == YesOrNo.YES.type) {
+            // 抹除双方的朋友关系，自己的关系删除即可
+            Fans pendingFan = queryFansRelationship(vlogerId, myId);
+            pendingFan.setIsFanFriendOfMine(YesOrNo.NO.type);
+            fansMapper.updateByPrimaryKeySelective(pendingFan);
+        }
+        // 删除自己的关注关联表记录
+        fansMapper.delete(fan);
+    }
 }

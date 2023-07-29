@@ -67,4 +67,22 @@ public class FansController extends BaseInfoProperties {
 
         return GraceJSONResult.ok();
     }
+
+    @PostMapping("cancel")
+    public GraceJSONResult cancel(@RequestParam String myId,
+                                  @RequestParam String vlogerId) {
+
+        // 删除业务的执行
+        fansService.doCancel(myId, vlogerId);
+
+        // 博主的粉丝-1，我的关注-1
+        redis.decrement(REDIS_MY_FOLLOWS_COUNTS + ":" + myId, 1);
+        redis.decrement(REDIS_MY_FANS_COUNTS + ":" + vlogerId, 1);
+
+        // 我和博主的关联关系，依赖redis，不要存储数据库，避免db的性能瓶颈
+        redis.del(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId);
+
+        return GraceJSONResult.ok();
+    }
+
 }

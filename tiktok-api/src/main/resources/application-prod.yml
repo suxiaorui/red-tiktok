@@ -1,4 +1,38 @@
 server:
   port: 8080
 
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/imooc-red-book-dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123123
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 600000
+      pool-name: DataSourceHikariCP
+      max-lifetime: 18000000
+      connection-test-query: SELECT 1
+  redis:
+    host: 192.168.47.132
+    port: 6379
+    database: 0
+    password: 123321
+  data:
+    mongodb:
+      uri: mongodb://root:root@192.168.47.132:27017
+      database: red-tiktok
 
+# MinIO 配置
+minio:
+  endpoint: http://192.168.47.132:9000      # MinIO服务地址
+  fileHost: http://192.168.47.132:9000      # 文件地址host
+  bucketName: imooc                      # 存储桶bucket名称
+  accessKey: root                         # 用户名
+  secretKey: 12345678                     # 密码
+  imgSize: 1024                           # 图片大小限制，单位：m
+  fileSize: 1024                          # 文件大小限制，单位：m

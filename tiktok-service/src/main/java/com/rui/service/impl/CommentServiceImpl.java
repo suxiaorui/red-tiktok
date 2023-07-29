@@ -1,17 +1,25 @@
 package com.rui.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.rui.base.BaseInfoProperties;
 import com.rui.bo.CommentBO;
+import com.rui.enums.YesOrNo;
 import com.rui.mapper.CommentMapper;
+import com.rui.mapper.CommentMapperCustom;
 import com.rui.pojo.Comment;
 import com.rui.service.CommentService;
+import com.rui.utils.PagedGridResult;
 import com.rui.vo.CommentVO;
+import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author suxiaorui
@@ -24,6 +32,9 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
 
     @Autowired
     private CommentMapper commentMapper;
+
+    @Autowired
+    private CommentMapperCustom commentMapperCustom;
 
     @Autowired
     private Sid sid;
@@ -57,5 +68,21 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
         BeanUtils.copyProperties(comment, commentVO);
 
         return commentVO;
+    }
+
+    @Override
+    public PagedGridResult queryVlogComments(String vlogId,
+                                             String userId,
+                                             Integer page,
+                                             Integer pageSize) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("vlogId", vlogId);
+
+        PageHelper.startPage(page, pageSize);
+
+        List<CommentVO> list = commentMapperCustom.getCommentList(map);
+
+        return setterPagedGrid(list, page);
     }
 }

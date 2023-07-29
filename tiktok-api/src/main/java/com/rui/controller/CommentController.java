@@ -1,16 +1,15 @@
 package com.rui.controller;
 
+import com.rui.base.BaseInfoProperties;
 import com.rui.bo.CommentBO;
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.service.CommentService;
 import com.rui.vo.CommentVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -25,7 +24,7 @@ import javax.validation.Valid;
 @Api(tags = "CommentController 评论模块的接口")
 @RequestMapping("comment")
 @RestController
-public class CommentController {
+public class CommentController extends BaseInfoProperties {
 
     @Autowired
     private CommentService commentService;
@@ -36,5 +35,30 @@ public class CommentController {
         CommentVO commentVO = commentService.createComment(commentBO);
         return GraceJSONResult.ok(commentVO);
 
+    }
+
+    @GetMapping("counts")
+    public GraceJSONResult counts(@RequestParam String vlogId) {
+
+        String countsStr = redis.get(REDIS_VLOG_COMMENT_COUNTS + ":" + vlogId);
+        if (StringUtils.isBlank(countsStr)) {
+            countsStr = "0";
+        }
+
+        return GraceJSONResult.ok(Integer.valueOf(countsStr));
+    }
+
+    @GetMapping("list")
+    public GraceJSONResult list(@RequestParam String vlogId,
+                                @RequestParam(defaultValue = "") String userId,
+                                @RequestParam Integer page,
+                                @RequestParam Integer pageSize) {
+
+        return GraceJSONResult.ok(
+                commentService.queryVlogComments(
+                        vlogId,
+                        userId,
+                        page,
+                        pageSize));
     }
 }

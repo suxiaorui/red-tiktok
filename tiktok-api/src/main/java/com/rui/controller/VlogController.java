@@ -2,6 +2,7 @@ package com.rui.controller;
 
 import com.rui.base.BaseInfoProperties;
 import com.rui.bo.VlogBO;
+import com.rui.enums.YesOrNo;
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.service.VlogService;
 import com.rui.utils.PagedGridResult;
@@ -54,4 +55,23 @@ public class VlogController extends BaseInfoProperties {
                                   @RequestParam String vlogId) {
         return GraceJSONResult.ok(vlogService.getVlogDetailById(userId, vlogId));
     }
+
+    @PostMapping("changeToPrivate")
+    public GraceJSONResult changeToPrivate(@RequestParam String userId,
+                                           @RequestParam String vlogId) {
+        vlogService.changeToPrivateOrPublic(userId,
+                vlogId,
+                YesOrNo.YES.type);
+        return GraceJSONResult.ok();
+    }
+
+    @PostMapping("changeToPublic")
+    public GraceJSONResult changeToPublic(@RequestParam String userId,
+                                          @RequestParam String vlogId) {
+        vlogService.changeToPrivateOrPublic(userId,
+                vlogId,
+                YesOrNo.NO.type);
+        return GraceJSONResult.ok();
+    }
+
 }

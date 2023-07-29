@@ -1,6 +1,7 @@
 package com.rui.service;
 
 import com.rui.bo.CommentBO;
+import com.rui.pojo.Comment;
 import com.rui.utils.PagedGridResult;
 import com.rui.vo.CommentVO;
 
@@ -32,4 +33,8 @@ public interface CommentService {
                               String commentId,
                               String vlogId);
 
+    /**
+     * 根据主键查询comment
+     */
+    public Comment getComment(String id);
 }

@@ -146,4 +146,9 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
         // 评论总数的累减
         redis.decrement(REDIS_VLOG_COMMENT_COUNTS + ":" + vlogId, 1);
     }
+
+    @Override
+    public Comment getComment(String id) {
+        return commentMapper.selectByPrimaryKey(id);
+    }
 }

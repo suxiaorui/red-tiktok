@@ -7,6 +7,8 @@ import com.rui.grace.result.GraceJSONResult;
 import com.rui.pojo.Comment;
 import com.rui.pojo.Vlog;
 import com.rui.service.CommentService;
+import com.rui.service.MsgService;
+import com.rui.service.VlogService;
 import com.rui.vo.CommentVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,12 @@ public class CommentController extends BaseInfoProperties {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private MsgService msgService;
+
+    @Autowired
+    private VlogService vlogService;
 
     @GetMapping("create")
     public Object create(@RequestBody @Valid CommentBO commentBO) throws  Exception{
@@ -86,6 +94,18 @@ public class CommentController extends BaseInfoProperties {
         redis.incrementHash(REDIS_VLOG_COMMENT_LIKED_COUNTS, commentId, 1);
         redis.setHashValue(REDIS_USER_LIKE_COMMENT, userId + ":" + commentId, "1");
 //        redis.hset(REDIS_USER_LIKE_COMMENT, userId, "1");
+
+        // 系统消息：点赞评论
+        Comment comment = commentService.getComment(commentId);
+        Vlog vlog = vlogService.getVlog(comment.getVlogId());
+        Map msgContent = new HashMap();
+        msgContent.put("vlogId", vlog.getId());
+        msgContent.put("vlogCover", vlog.getCover());
+        msgContent.put("commentId", commentId);
+        msgService.createMsg(userId,
+                comment.getCommentUserId(),
+                MessageEnum.LIKE_COMMENT.type,
+                msgContent);
 
         return GraceJSONResult.ok();
     }

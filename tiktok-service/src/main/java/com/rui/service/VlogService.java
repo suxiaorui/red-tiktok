@@ -2,6 +2,7 @@ package com.rui.service;
 
 import com.rui.bo.VlogBO;
 import com.rui.utils.PagedGridResult;
+import com.rui.vo.IndexVlogVO;
 
 /**
  * @Author suxiaorui
@@ -23,4 +24,9 @@ public interface VlogService {
                                             String search,
                                             Integer page,
                                             Integer pageSize);
+
+    /**
+     * 根据视频主键查询vlog
+     */
+    public IndexVlogVO getVlogDetailById(String userId, String vlogId);
 }

@@ -79,4 +79,22 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 //        return list;
         return setterPagedGrid(list, page);
     }
+
+    @Override
+    public IndexVlogVO getVlogDetailById(String userId, String vlogId) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("vlogId", vlogId);
+
+        List<IndexVlogVO> list = vlogMapperCustom.getVlogDetailById(map);
+
+        if (list != null && list.size() > 0 && !list.isEmpty()) {
+            IndexVlogVO vlogVO = list.get(0);
+            return vlogVO;
+        }
+
+        return null;
+    }
+
+
 }

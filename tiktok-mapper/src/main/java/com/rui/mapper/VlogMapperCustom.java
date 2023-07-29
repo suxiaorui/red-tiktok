@@ -17,4 +17,6 @@ import java.util.Map;
 public interface VlogMapperCustom {
 
     public List<IndexVlogVO> getIndexVlogList(@Param("paramMap") Map<String, Object> map);
+    public List<IndexVlogVO> getVlogDetailById(@Param("paramMap")Map<String, Object> map);
+
 }

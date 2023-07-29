@@ -3,6 +3,7 @@ package com.rui.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.rui.base.BaseInfoProperties;
 import com.rui.bo.VlogBO;
+import com.rui.enums.MessageEnum;
 import com.rui.enums.YesOrNo;
 import com.rui.mapper.MyLikedVlogMapper;
 import com.rui.mapper.VlogMapper;
@@ -10,6 +11,7 @@ import com.rui.mapper.VlogMapperCustom;
 import com.rui.pojo.MyLikedVlog;
 import com.rui.pojo.Vlog;
 import com.rui.service.FansService;
+import com.rui.service.MsgService;
 import com.rui.service.VlogService;
 import com.rui.utils.PagedGridResult;
 import com.rui.vo.IndexVlogVO;
@@ -47,6 +49,8 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
     @Autowired
     private FansService fansService;
 
+    @Autowired
+    private MsgService msgService;
 
     @Autowired
     private Sid sid;
@@ -206,6 +210,20 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
         myLikedVlogMapper.insert(likedVlog);
 
+        // 系统消息：点赞短视频
+        Vlog vlog = this.getVlog(vlogId);
+        Map msgContent = new HashMap();
+        msgContent.put("vlogId", vlogId);
+        msgContent.put("vlogCover", vlog.getCover());
+        msgService.createMsg(userId,
+                vlog.getVlogerId(),
+                MessageEnum.LIKE_VLOG.type,
+                msgContent);
+
+    }
+
+    public Vlog getVlog(String id) {
+        return vlogMapper.selectByPrimaryKey(id);
     }
 
     @Transactional

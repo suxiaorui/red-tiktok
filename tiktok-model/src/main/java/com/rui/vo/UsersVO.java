@@ -46,7 +46,7 @@ public class UsersVO implements Serializable {
 
     private Integer myFollowsCounts;   // 我关注的博主总数
     private Integer myFansCounts;      // 我的粉丝总数
-    //    private Integer myLikedVlogCounts;
+    private Integer myLikedVlogCounts;
     private Integer totalLikeMeCounts;     // 获赞总数
 
 

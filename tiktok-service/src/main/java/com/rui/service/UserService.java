@@ -1,5 +1,6 @@
 package com.rui.service;
 
+import com.rui.bo.UpdatedUserBO;
 import com.rui.pojo.Users;
 
 /**
@@ -24,6 +25,16 @@ public interface UserService {
      * 根据用户主键查询用户信息
      */
     public Users getUser(String userId);
+
+    /**
+     * 用户信息修改
+     */
+    public Users updateUserInfo(UpdatedUserBO updatedUserBO);
+
+    /**
+     * 用户信息修改
+     */
+    public Users updateUserInfo(UpdatedUserBO updatedUserBO, Integer type);
 
 
 }

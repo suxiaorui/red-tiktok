@@ -1,5 +1,7 @@
 package com.rui.controller;
 
+import com.rui.bo.UpdatedUserBO;
+import com.rui.enums.UserInfoModifyType;
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.pojo.Users;
 import com.rui.service.UserService;
@@ -9,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author suxiaorui
@@ -71,6 +70,17 @@ public class UserInfoController extends BaseInfoProperties {
         usersVO.setTotalLikeMeCounts(totalLikeMeCounts);
 
         return GraceJSONResult.ok(usersVO);
+    }
 
+    @PostMapping("modifyUserInfo")
+    public GraceJSONResult modifyUserInfo(@RequestBody UpdatedUserBO updatedUserBO,
+                                          @RequestParam Integer type)
+            throws Exception {
+
+        UserInfoModifyType.checkUserInfoTypeIsRight(type);
+
+        Users newUserInfo = userService.updateUserInfo(updatedUserBO, type);
+
+        return GraceJSONResult.ok(newUserInfo);
     }
 }

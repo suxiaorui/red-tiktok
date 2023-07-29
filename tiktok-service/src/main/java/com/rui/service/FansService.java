@@ -1,5 +1,7 @@
 package com.rui.service;
 
+import com.rui.utils.PagedGridResult;
+
 /**
  * @Author suxiaorui
  * @Description TODO
@@ -22,5 +24,13 @@ public interface FansService {
      * 查询用户是否关注博主
      */
     public boolean queryDoIFollowVloger(String myId, String vlogerId);
+
+
+    /**
+     * 查询我关注的博主列表
+     */
+    public PagedGridResult queryMyFollows(String myId,
+                                          Integer page,
+                                          Integer pageSize);
 
 }

@@ -1,17 +1,23 @@
 package com.rui.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.rui.base.BaseInfoProperties;
 import com.rui.enums.YesOrNo;
 import com.rui.mapper.FansMapper;
+import com.rui.mapper.FansMapperCustom;
 import com.rui.pojo.Fans;
 import com.rui.service.FansService;
+import com.rui.utils.PagedGridResult;
+import com.rui.vo.VlogerVO;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author suxiaorui
@@ -24,6 +30,9 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
 
     @Autowired
     private FansMapper fansMapper;
+
+    @Autowired
+    private FansMapperCustom fansMapperCustom;
 
     @Autowired
     private Sid sid;
@@ -89,5 +98,19 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
     public boolean queryDoIFollowVloger(String myId, String vlogerId) {
         Fans vloger = queryFansRelationship(myId, vlogerId);
         return vloger != null;
+    }
+
+    @Override
+    public PagedGridResult queryMyFollows(String myId,
+                                          Integer page,
+                                          Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("myId", myId);
+
+        PageHelper.startPage(page, pageSize);
+
+        List<VlogerVO> list = fansMapperCustom.queryMyFollows(map);
+
+        return setterPagedGrid(list, page);
     }
 }

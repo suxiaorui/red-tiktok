@@ -1,5 +1,6 @@
 package com.rui.controller;
 
+import com.rui.base.BaseInfoProperties;
 import com.rui.bo.RegistLoginBO;
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.grace.result.ResponseStatusEnum;
@@ -29,7 +30,7 @@ import java.util.UUID;
 @Api(tags = "PassportController 通信证接口模块")
 @RequestMapping("passport")
 @RestController
-public class PassportController extends BaseInfoProperties{
+public class PassportController extends BaseInfoProperties {
 
     @Autowired
     private SMSUtils smsUtils;

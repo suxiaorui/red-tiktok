@@ -1,6 +1,7 @@
 package com.rui.controller;
 
 import com.rui.MinIOConfig;
+import com.rui.base.BaseInfoProperties;
 import com.rui.bo.UpdatedUserBO;
 import com.rui.enums.FileTypeEnum;
 import com.rui.enums.UserInfoModifyType;

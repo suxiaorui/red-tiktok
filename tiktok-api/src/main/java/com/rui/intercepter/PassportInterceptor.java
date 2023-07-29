@@ -1,6 +1,6 @@
 package com.rui.intercepter;
 
-import com.rui.controller.BaseInfoProperties;
+import com.rui.base.BaseInfoProperties;
 import com.rui.exceptions.GraceException;
 import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.utils.IPUtil;

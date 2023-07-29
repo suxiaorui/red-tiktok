@@ -51,6 +51,10 @@ public interface VlogService {
      */
     public void userLikeVlog(String userId, String vlogId);
 
+    /**
+     * 用户取消点赞/喜欢视频
+     */
+    public void userUnLikeVlog(String userId, String vlogId);
 
 
 }

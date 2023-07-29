@@ -8,7 +8,9 @@ import com.rui.mapper.FansMapperCustom;
 import com.rui.pojo.Fans;
 import com.rui.service.FansService;
 import com.rui.utils.PagedGridResult;
+import com.rui.vo.FansVO;
 import com.rui.vo.VlogerVO;
+import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,4 +115,26 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
 
         return setterPagedGrid(list, page);
     }
+
+    @Override
+    public PagedGridResult queryMyFans(String myId,
+                                       Integer page,
+                                       Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("myId", myId);
+
+        PageHelper.startPage(page, pageSize);
+
+        List<FansVO> list = fansMapperCustom.queryMyFans(map);
+
+        for (FansVO f : list) {
+            String relationship = redis.get(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + f.getFanId());
+            if (StringUtils.isNotBlank(relationship) && relationship.equalsIgnoreCase("1")) {
+                f.setFriend(true);
+            }
+        }
+
+        return setterPagedGrid(list, page);
+    }
+
 }

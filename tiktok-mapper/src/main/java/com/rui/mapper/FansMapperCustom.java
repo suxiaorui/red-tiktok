@@ -1,5 +1,6 @@
 package com.rui.mapper;
 
+import com.rui.vo.FansVO;
 import com.rui.vo.VlogerVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,5 @@ public interface FansMapperCustom {
 
     public List<VlogerVO> queryMyFollows(@Param("paramMap") Map<String, Object> map);
 
+    public List<FansVO> queryMyFans(@Param("paramMap") Map<String, Object> map);
 }

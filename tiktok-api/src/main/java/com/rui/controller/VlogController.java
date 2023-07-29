@@ -112,6 +112,25 @@ public class VlogController extends BaseInfoProperties {
         return GraceJSONResult.ok(gridResult);
     }
 
+    @GetMapping("myLikedList")
+    public GraceJSONResult myLikedList(@RequestParam String userId,
+                                       @RequestParam Integer page,
+                                       @RequestParam Integer pageSize) {
+
+        if (page == null) {
+            page = COMMON_START_PAGE;
+        }
+        if (pageSize == null) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+
+        PagedGridResult gridResult = vlogService.getMyLikedVlogList(userId,
+                page,
+                pageSize);
+        return GraceJSONResult.ok(gridResult);
+    }
+
+
     @PostMapping("like")
     public GraceJSONResult like(@RequestParam String userId,
                                 @RequestParam String vlogerId,
@@ -143,5 +162,28 @@ public class VlogController extends BaseInfoProperties {
         redis.del(REDIS_USER_LIKE_VLOG + ":" + userId + ":" + vlogId);
 
         return GraceJSONResult.ok();
+    }
+
+    @PostMapping("totalLikedCounts")
+    public GraceJSONResult totalLikedCounts(@RequestParam String vlogId) {
+        return GraceJSONResult.ok(vlogService.getVlogBeLikedCounts(vlogId));
+    }
+
+    @GetMapping("followList")
+    public GraceJSONResult followList(@RequestParam String myId,
+                                      @RequestParam Integer page,
+                                      @RequestParam Integer pageSize) {
+
+        if (page == null) {
+            page = COMMON_START_PAGE;
+        }
+        if (pageSize == null) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+
+        PagedGridResult gridResult = vlogService.getMyFollowVlogList(myId,
+                page,
+                pageSize);
+        return GraceJSONResult.ok(gridResult);
     }
 }

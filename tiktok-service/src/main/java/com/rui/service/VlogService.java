@@ -56,5 +56,22 @@ public interface VlogService {
      */
     public void userUnLikeVlog(String userId, String vlogId);
 
+    /**
+     * 获得用户点赞视频的总数
+     */
+    public Integer getVlogBeLikedCounts(String vlogId);
 
+    /**
+     * 查询用户点赞过的短视频
+     */
+    public PagedGridResult getMyLikedVlogList(String userId,
+                                              Integer page,
+                                              Integer pageSize);
+
+    /**
+     * 查询用户关注的博主发布的短视频列表
+     */
+    public PagedGridResult getMyFollowVlogList(String myId,
+                                               Integer page,
+                                               Integer pageSize);
 }

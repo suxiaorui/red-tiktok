@@ -2,7 +2,10 @@ package com.rui.controller;
 
 import com.rui.base.BaseInfoProperties;
 import com.rui.bo.CommentBO;
+import com.rui.enums.MessageEnum;
 import com.rui.grace.result.GraceJSONResult;
+import com.rui.pojo.Comment;
+import com.rui.pojo.Vlog;
 import com.rui.service.CommentService;
 import com.rui.vo.CommentVO;
 import io.swagger.annotations.Api;
@@ -12,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author suxiaorui
@@ -70,6 +75,28 @@ public class CommentController extends BaseInfoProperties {
         commentService.deleteComment(commentUserId,
                 commentId,
                 vlogId);
+        return GraceJSONResult.ok();
+    }
+
+    @PostMapping("like")
+    public GraceJSONResult like(@RequestParam String commentId,
+                                @RequestParam String userId) {
+
+        // 注意 bigkey
+        redis.incrementHash(REDIS_VLOG_COMMENT_LIKED_COUNTS, commentId, 1);
+        redis.setHashValue(REDIS_USER_LIKE_COMMENT, userId + ":" + commentId, "1");
+//        redis.hset(REDIS_USER_LIKE_COMMENT, userId, "1");
+
+        return GraceJSONResult.ok();
+    }
+
+    @PostMapping("unlike")
+    public GraceJSONResult unlike(@RequestParam String commentId,
+                                  @RequestParam String userId) {
+
+        redis.decrementHash(REDIS_VLOG_COMMENT_LIKED_COUNTS, commentId, 1);
+        redis.hdel(REDIS_USER_LIKE_COMMENT, userId + ":" + commentId);
+
         return GraceJSONResult.ok();
     }
 }

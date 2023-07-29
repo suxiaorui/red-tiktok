@@ -4,8 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.rui.base.BaseInfoProperties;
 import com.rui.bo.VlogBO;
 import com.rui.enums.YesOrNo;
+import com.rui.mapper.MyLikedVlogMapper;
 import com.rui.mapper.VlogMapper;
 import com.rui.mapper.VlogMapperCustom;
+import com.rui.pojo.MyLikedVlog;
 import com.rui.pojo.Vlog;
 import com.rui.service.VlogService;
 import com.rui.utils.PagedGridResult;
@@ -37,6 +39,10 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
     @Autowired
     private VlogMapperCustom vlogMapperCustom;
+
+    @Autowired
+    private MyLikedVlogMapper myLikedVlogMapper;
+
 
     @Autowired
     private Sid sid;
@@ -130,5 +136,19 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         return setterPagedGrid(list, page);
     }
 
+    @Transactional
+    @Override
+    public void userLikeVlog(String userId, String vlogId) {
+
+        String rid = sid.nextShort();
+
+        MyLikedVlog likedVlog = new MyLikedVlog();
+        likedVlog.setId(rid);
+        likedVlog.setVlogId(vlogId);
+        likedVlog.setUserId(userId);
+
+        myLikedVlogMapper.insert(likedVlog);
+
+    }
 
 }

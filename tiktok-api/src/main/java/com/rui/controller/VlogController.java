@@ -112,4 +112,21 @@ public class VlogController extends BaseInfoProperties {
         return GraceJSONResult.ok(gridResult);
     }
 
+    @PostMapping("like")
+    public GraceJSONResult like(@RequestParam String userId,
+                                @RequestParam String vlogerId,
+                                @RequestParam String vlogId) {
+
+        // 我点赞的视频，关联关系保存到数据库
+        vlogService.userLikeVlog(userId, vlogId);
+
+        // 点赞后，视频和视频发布者的获赞都会 +1
+        redis.increment(REDIS_VLOGER_BE_LIKED_COUNTS + ":" + vlogerId, 1);
+        redis.increment(REDIS_VLOG_BE_LIKED_COUNTS + ":" + vlogId, 1);
+
+        // 我点赞的视频，需要在redis中保存关联关系
+        redis.set(REDIS_USER_LIKE_VLOG + ":" + userId + ":" + vlogId, "1");
+
+        return GraceJSONResult.ok();
+    }
 }

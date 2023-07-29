@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author suxiaorui
@@ -83,6 +80,12 @@ public class FansController extends BaseInfoProperties {
         redis.del(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId);
 
         return GraceJSONResult.ok();
+    }
+
+    @GetMapping("queryDoIFollowVloger")
+    public GraceJSONResult queryDoIFollowVloger(@RequestParam String myId,
+                                                @RequestParam String vlogerId) {
+        return GraceJSONResult.ok(fansService.queryDoIFollowVloger(myId, vlogerId));
     }
 
 }

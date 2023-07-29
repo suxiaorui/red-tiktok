@@ -84,4 +84,10 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         // 删除自己的关注关联表记录
         fansMapper.delete(fan);
     }
+
+    @Override
+    public boolean queryDoIFollowVloger(String myId, String vlogerId) {
+        Fans vloger = queryFansRelationship(myId, vlogerId);
+        return vloger != null;
+    }
 }

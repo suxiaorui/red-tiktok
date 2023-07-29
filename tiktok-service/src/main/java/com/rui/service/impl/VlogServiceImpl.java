@@ -125,6 +125,25 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         return isLike;
     }
 
+    private IndexVlogVO setterVO(IndexVlogVO v, String userId) {
+        String vlogerId = v.getVlogerId();
+        String vlogId = v.getVlogId();
+
+        if (StringUtils.isNotBlank(userId)) {
+            // 用户是否关注该博主
+            boolean doIFollowVloger = fansService.queryDoIFollowVloger(userId, vlogerId);
+            v.setDoIFollowVloger(doIFollowVloger);
+
+            // 判断当前用户是否点赞过视频
+            v.setDoILikeThisVlog(doILikeVlog(userId, vlogId));
+        }
+
+        // 获得当前视频被点赞过的总数
+        v.setLikeCounts(getVlogBeLikedCounts(vlogId));
+
+        return v;
+    }
+
     @Override
     public IndexVlogVO getVlogDetailById(String userId, String vlogId) {
 
@@ -135,7 +154,7 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
         if (list != null && list.size() > 0 && !list.isEmpty()) {
             IndexVlogVO vlogVO = list.get(0);
-            return vlogVO;
+            return setterVO(vlogVO, userId);
         }
 
         return null;
@@ -222,6 +241,37 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         map.put("myId", myId);
 
         List<IndexVlogVO> list = vlogMapperCustom.getMyFollowVlogList(map);
+
+        for (IndexVlogVO v : list) {
+            String vlogerId = v.getVlogerId();
+            String vlogId = v.getVlogId();
+
+            if (StringUtils.isNotBlank(myId)) {
+                // 用户必定关注该博主
+                v.setDoIFollowVloger(true);
+
+                // 判断当前用户是否点赞过视频
+                v.setDoILikeThisVlog(doILikeVlog(myId, vlogId));
+            }
+
+            // 获得当前视频被点赞过的总数
+            v.setLikeCounts(getVlogBeLikedCounts(vlogId));
+        }
+
+        return setterPagedGrid(list, page);
+    }
+
+    @Override
+    public PagedGridResult getMyFriendVlogList(String myId,
+                                               Integer page,
+                                               Integer pageSize) {
+
+        PageHelper.startPage(page, pageSize);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("myId", myId);
+
+        List<IndexVlogVO> list = vlogMapperCustom.getMyFriendVlogList(map);
 
         for (IndexVlogVO v : list) {
             String vlogerId = v.getVlogerId();

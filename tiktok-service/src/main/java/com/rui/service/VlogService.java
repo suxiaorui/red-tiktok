@@ -74,4 +74,13 @@ public interface VlogService {
     public PagedGridResult getMyFollowVlogList(String myId,
                                                Integer page,
                                                Integer pageSize);
+
+    /**
+     * 查询朋友发布的短视频列表
+     */
+    public PagedGridResult getMyFriendVlogList(String myId,
+                                               Integer page,
+                                               Integer pageSize);
+
+
 }

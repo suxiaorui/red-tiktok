@@ -83,6 +83,24 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
 
         List<CommentVO> list = commentMapperCustom.getCommentList(map);
 
+        for (CommentVO cv:list) {
+            String commentId = cv.getCommentId();
+
+            // 当前短视频的某个评论的点赞总数
+            String countsStr = redis.getHashValue(REDIS_VLOG_COMMENT_LIKED_COUNTS, commentId);
+            Integer counts = 0;
+            if (StringUtils.isNotBlank(countsStr)) {
+                counts = Integer.valueOf(countsStr);
+            }
+            cv.setLikeCounts(counts);
+
+            // 判断当前用户是否点赞过该评论
+            String doILike = redis.hget(REDIS_USER_LIKE_COMMENT, userId + ":" + commentId);
+            if (StringUtils.isNotBlank(doILike) && doILike.equalsIgnoreCase("1")) {
+                cv.setIsLike(YesOrNo.YES.type);
+            }
+        }
+
         return setterPagedGrid(list, page);
     }
 

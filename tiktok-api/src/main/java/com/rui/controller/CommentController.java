@@ -61,4 +61,15 @@ public class CommentController extends BaseInfoProperties {
                         page,
                         pageSize));
     }
+
+
+    @DeleteMapping("delete")
+    public GraceJSONResult delete(@RequestParam String commentUserId,
+                                  @RequestParam String commentId,
+                                  @RequestParam String vlogId) {
+        commentService.deleteComment(commentUserId,
+                commentId,
+                vlogId);
+        return GraceJSONResult.ok();
+    }
 }

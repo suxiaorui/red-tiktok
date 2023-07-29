@@ -85,4 +85,19 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
 
         return setterPagedGrid(list, page);
     }
+
+    @Override
+    public void deleteComment(String commentUserId,
+                              String commentId,
+                              String vlogId) {
+
+        Comment pendingDelete = new Comment();
+        pendingDelete.setId(commentId);
+        pendingDelete.setCommentUserId(commentUserId);
+
+        commentMapper.delete(pendingDelete);
+
+        // 评论总数的累减
+        redis.decrement(REDIS_VLOG_COMMENT_COUNTS + ":" + vlogId, 1);
+    }
 }

@@ -24,4 +24,12 @@ public interface CommentService {
                                              String userId,
                                              Integer page,
                                              Integer pageSize);
+
+    /**
+     * 删除评论
+     */
+    public void deleteComment(String commentUserId,
+                              String commentId,
+                              String vlogId);
+
 }

@@ -2,11 +2,13 @@ package com.rui.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.rui.base.BaseInfoProperties;
+import com.rui.enums.MessageEnum;
 import com.rui.enums.YesOrNo;
 import com.rui.mapper.FansMapper;
 import com.rui.mapper.FansMapperCustom;
 import com.rui.pojo.Fans;
 import com.rui.service.FansService;
+import com.rui.service.MsgService;
 import com.rui.utils.PagedGridResult;
 import com.rui.vo.FansVO;
 import com.rui.vo.VlogerVO;
@@ -37,6 +39,9 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
     private FansMapperCustom fansMapperCustom;
 
     @Autowired
+    private MsgService msgService;
+
+    @Autowired
     private Sid sid;
 
     @Transactional
@@ -62,6 +67,9 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         }
 
         fansMapper.insert(fans);
+
+        // 系统消息：关注
+        msgService.createMsg(myId, vlogerId, MessageEnum.FOLLOW_YOU.type, null);
     }
 
     public Fans queryFansRelationship(String fanId, String vlogerId) {

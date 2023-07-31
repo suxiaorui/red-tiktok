@@ -2,21 +2,25 @@ package com.rui.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.rui.base.BaseInfoProperties;
+import com.rui.base.RabbitMQConfig;
 import com.rui.bo.VlogBO;
 import com.rui.enums.MessageEnum;
 import com.rui.enums.YesOrNo;
 import com.rui.mapper.MyLikedVlogMapper;
 import com.rui.mapper.VlogMapper;
 import com.rui.mapper.VlogMapperCustom;
+import com.rui.mo.MessageMO;
 import com.rui.pojo.MyLikedVlog;
 import com.rui.pojo.Vlog;
 import com.rui.service.FansService;
 import com.rui.service.MsgService;
 import com.rui.service.VlogService;
+import com.rui.utils.JsonUtils;
 import com.rui.utils.PagedGridResult;
 import com.rui.vo.IndexVlogVO;
 import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +55,9 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
     @Autowired
     private MsgService msgService;
+
+    @Autowired
+    public RabbitTemplate rabbitTemplate;
 
     @Autowired
     private Sid sid;
@@ -215,10 +222,19 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         Map msgContent = new HashMap();
         msgContent.put("vlogId", vlogId);
         msgContent.put("vlogCover", vlog.getCover());
-        msgService.createMsg(userId,
-                vlog.getVlogerId(),
-                MessageEnum.LIKE_VLOG.type,
-                msgContent);
+//        msgService.createMsg(userId,
+//                vlog.getVlogerId(),
+//                MessageEnum.LIKE_VLOG.type,
+//                msgContent);
+        // MQ异步解耦
+        MessageMO messageMO = new MessageMO();
+        messageMO.setFromUserId(userId);
+        messageMO.setToUserId(vlog.getVlogerId());
+        messageMO.setMsgContent(msgContent);
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE_MSG,
+                "sys.msg." + MessageEnum.LIKE_VLOG.enValue,
+                JsonUtils.objectToJson(messageMO));
 
     }
 
